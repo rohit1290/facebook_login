@@ -20,7 +20,7 @@ $app_id = elgg_get_plugin_setting('app_id', 'facebook_login');
 $redirect_uri = elgg_generate_url('collection:object:facebook_login:login');
 $state = md5(rand(1000, 999));
 
-$url = "https://www.facebook.com/$app_version/dialog/oauth?client_id={$app_id}&redirect_uri={$redirect_uri}&state={$state}";
+$url = "https://www.facebook.com/$app_version/dialog/oauth?client_id={$app_id}&redirect_uri={$redirect_uri}&state={$state}&scope=email";
 
 header("Location: {$url}");
 die();
