@@ -100,7 +100,7 @@ $perm_data = json_decode($perm_data, true);
 if($perm_data['data'][0]['status'] != "granted") {
 	// Re Requesting for the permission (email) as it was not allowed earlier
 	$url = "https://www.facebook.com/$app_version/dialog/oauth?client_id={$app_id}&redirect_uri={$redirect_uri}&auth_type=rerequest&scope=email";
-	header("Location: {$cncl_url}");
+	header("Location: {$url}");
 	die();
 }
 
