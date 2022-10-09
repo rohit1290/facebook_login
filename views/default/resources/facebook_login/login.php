@@ -50,8 +50,20 @@ $redirect_uri = elgg_generate_url('collection:object:facebook_login:login');
 // $state = md5(rand(1000, 999));
 
 $url = "https://graph.facebook.com/$app_version/oauth/access_token?client_id=$app_id&redirect_uri=$redirect_uri&client_secret=$app_secret&code=$code";
-$code_exchange = file_get_contents($url);
+$curl = curl_init();
+curl_setopt_array($curl, array(
+  CURLOPT_URL => $url,
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => '',
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => 'GET',
+));
 
+$code_exchange = curl_exec($curl);
+curl_close($curl);
 // {
 //   "access_token":"",
 //   "token_type":"",
