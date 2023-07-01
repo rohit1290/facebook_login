@@ -5,12 +5,12 @@
 $cncl_url = elgg_get_site_url(). "login";
 
 if (!facebook_login_allow_sign_on_with_facebook()) {
-	register_error(elgg_echo('Facebook registration is disabled'));
+	elgg_register_error_message(elgg_echo('Facebook registration is disabled'));
 	header("Location: {$cncl_url}");
 	die();
 }
 if (elgg_is_logged_in()) {
-	register_error(elgg_echo('Please logout and then login using facebook'));
+	elgg_register_error_message(elgg_echo('Please logout and then login using facebook'));
 	header("Location: {$cncl_url}");
 	die();
 }

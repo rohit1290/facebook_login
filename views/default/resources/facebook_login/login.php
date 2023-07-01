@@ -3,12 +3,12 @@
 $cncl_url = elgg_get_site_url(). "login";
 
 if (!facebook_login_allow_sign_on_with_facebook()) {
-	register_error(elgg_echo('Facebook registration is disabled'));
+	elgg_register_error_message(elgg_echo('Facebook registration is disabled'));
 	header("Location: {$cncl_url}");
 	die();
 }
 if (elgg_is_logged_in()) {
-	register_error(elgg_echo('Please logout and then login using facebook'));
+	elgg_register_error_message(elgg_echo('Please logout and then login using facebook'));
 	header("Location: {$cncl_url}");
 	die();
 }
@@ -25,7 +25,7 @@ $error_reason = get_input('error_reason', null);
 $error_description = get_input('error_description', null);
 
 if ($error_reason == "user_denied") {
-	register_error(elgg_echo($error_description));
+	elgg_register_error_message(elgg_echo($error_description));
 	header("Location: {$cncl_url}");
 	die();
 }
@@ -38,7 +38,7 @@ if ($error_reason == "user_denied") {
 
 $code = get_input('code', null);
 if($code == null) {
-	register_error("Authorization not found");
+	elgg_register_error_message("Authorization not found");
 	header("Location: {$cncl_url}");
 	die();
 }
@@ -72,14 +72,14 @@ curl_close($curl);
 
 // If file_get_contents failed and did not got any response
 if ($code_exchange === false) {
-	register_error("There was an error with the login. Please try again");
+	elgg_register_error_message("There was an error with the login. Please try again");
 	header("Location: {$cncl_url}");
 	die();
 }
 
 $code_exchange = json_decode($code_exchange, true);
 if(!array_key_exists('access_token', $code_exchange)) {
-	register_error("No access token found. Please try again");
+	elgg_register_error_message("No access token found. Please try again");
 	header("Location: {$cncl_url}");
 	die();
 }
@@ -91,7 +91,7 @@ $perm_data = file_get_contents($url);
 
 // If file_get_contents failed and did not got any response
 if ($perm_data === false) {
-	register_error("There was an error with the permissions. Please try again");
+	elgg_register_error_message("There was an error with the permissions. Please try again");
 	header("Location: {$cncl_url}");
 	die();
 }
@@ -109,7 +109,7 @@ $user_data = file_get_contents($url);
 
 // If file_get_contents failed and did not got any response
 if ($user_data === false) {
-	register_error("No user data returned from facebook");
+	elgg_register_error_message("No user data returned from facebook");
 	header("Location: {$cncl_url}");
 	die();
 }
@@ -121,7 +121,7 @@ $email = $user_data['email'];
 $fbaccess_token = $access_token;
 
 // Check if user exists with the email ID
-$getUsers = get_user_by_email($email);
+$getUsers = elgg_get_user_by_email($email);
 if ((int) $getUsers[0]->guid > 0) {
 	// if exists then retrieved the user
 	$user = get_user($getUsers[0]->guid);
@@ -133,7 +133,7 @@ if ((int) $getUsers[0]->guid > 0) {
 } else {
 	// Check new registration allowed
 	if (!facebook_login_allow_new_users_with_facebook()) {
-		register_error(elgg_echo('registerdisabled'));
+		elgg_register_error_message(elgg_echo('registerdisabled'));
 		header("Location: {$cncl_url}");
 		die();
 	}
@@ -143,7 +143,7 @@ if ((int) $getUsers[0]->guid > 0) {
 	$usernameTmp = $username;
 
 	$username = elgg_call(ELGG_SHOW_DISABLED_ENTITIES, function() use ($username) {
-		while (get_user_by_username($username)) {
+		while (elgg_get_user_by_username($username)) {
 			$username = $usernameTmp . '_' . rand(1000, 9999);
 		}
 		return $username;
@@ -152,7 +152,7 @@ if ((int) $getUsers[0]->guid > 0) {
 	$password = generate_random_cleartext_password();
 	$uguid = register_user($username, $password, $fbname, $email);
 	if ($uguid === false) {
-		register_error(elgg_echo('registerbad'));
+		elgg_register_error_message(elgg_echo('registerbad'));
 		header("Location: {$cncl_url}");
 		die();
 	} else {
@@ -164,7 +164,7 @@ if ((int) $getUsers[0]->guid > 0) {
 
   // We have a registered user
   login($user, true);
-  system_message(elgg_echo('facebook_login:login:success'));
+  elgg_register_success_message(elgg_echo('facebook_login:login:success'));
 
   // then map id, accessToken
   $user->setPluginSetting('facebook_login', 'fbid', $fbid);

@@ -6,7 +6,7 @@ $user->removePluginSetting('facebook_login', 'fbid');
 $user->removePluginSetting('facebook_login', 'fbaccess_token');
 // $user->removePluginSetting('facebook_login', 'fbname');
 
-system_message(elgg_echo('facebook_login:revoke:success'));
+elgg_register_success_message(elgg_echo('facebook_login:revoke:success'));
 $url = elgg_get_site_url().'settings/plugins/'.$user->username.'/facebook_login';
 header("Location: {$url}");
 die();
