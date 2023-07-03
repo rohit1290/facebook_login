@@ -118,19 +118,10 @@ $user_data = json_decode($user_data, true);
 $fbid = $user_data['id'];
 $fbname = $user_data['name'];
 $email = $user_data['email'];
-$fbaccess_token = $access_token;
 
 // Check if user exists with the email ID
-$getUsers = elgg_get_user_by_email($email);
-if ((int) $getUsers[0]->guid > 0) {
-	// if exists then retrieved the user
-	$user = get_user($getUsers[0]->guid);
-	$user->name = $fbname;
-	$user->validated = 1;
-	$user->validated_method = 'facebook';
-	$user->language = get_current_language();
-	$user->save();
-} else {
+$user = elgg_get_user_by_email($email);
+if (!$user instanceof \ElggUser) {
 	// Check new registration allowed
 	if (!facebook_login_allow_new_users_with_facebook()) {
 		elgg_register_error_message(elgg_echo('registerdisabled'));
@@ -149,27 +140,33 @@ if ((int) $getUsers[0]->guid > 0) {
 		return $username;
 	});
 
-	$password = generate_random_cleartext_password();
-	$uguid = register_user($username, $password, $fbname, $email);
-	if ($uguid === false) {
+	$password = elgg_generate_password();
+	$user = elgg_register_user([
+		'username' => $username,
+		'password' => $password,
+		'name' => $fbname,
+		'email' => $email,
+		'language' => elgg_get_config('language'),
+	]);
+	if (!$user instanceof \ElggUser) {
 		elgg_register_error_message(elgg_echo('registerbad'));
 		header("Location: {$cncl_url}");
 		die();
 	} else {
-		$user = get_user($uguid);
-	  // Send mail to user
 		fb_login_send_user_password_mail($email, $fbname, $username, $password);
 	}
 }
 
   // We have a registered user
-  login($user, true);
+  elgg_login($user, true);
   elgg_register_success_message(elgg_echo('facebook_login:login:success'));
 
   // then map id, accessToken
+	$user = elgg_get_logged_in_user_entity();
   $user->setPluginSetting('facebook_login', 'fbid', $fbid);
-  $user->setPluginSetting('facebook_login', 'fbaccess_token', $fbaccess_token);
-  // $user->setPluginSetting('facebook_login', 'fbname', $fbname);
+  $user->setPluginSetting('facebook_login', 'fbaccess_token', $access_token);
+  $user->setPluginSetting('facebook_login', 'fbname', $fbname);
+  $user->setPluginSetting('facebook_login', 'last_update', time());
 
   // also update the profile image of the user
   $url = "https://graph.facebook.com/$app_version/me/picture?type=large&redirect=false&access_token=$access_token";
@@ -193,7 +190,7 @@ if ((int) $user->icontime < (time() - 31536000)) {
 		$filehandler = new ElggFile();
 		$filehandler->owner_guid = $user->getGUID();
 		foreach ($sizes as $size => $dimensions) {
-			$filehandler->setFilename("profile/$user->guid$size.jpg");
+			$filehandler->setFilename("profile/$user->guid$size.webp");
 			$filehandler->open('write');
 			$filehandler->write($picture);
 			$filehandler->close();
