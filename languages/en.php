@@ -17,7 +17,7 @@ return array(
 
 	'facebook_login:usersettings:description' => "Link your %s account with Facebook.",
 	'facebook_login:usersettings:request' => "You must first <a href=\"%s\">authorize</a> %s to access your Facebook account.",
-	'facebook_login:usersettings:logout_required' => 'You must first authorize %s to access your Facebook account. Request you to kindly logout and login agian.',
+	'facebook_login:usersettings:logout_required' => 'You must first authorize %s to access your Facebook account. Request you to kindly logout and login agian usinng the facebook login button.',
 	'facebook_login:authorize:error' => 'Unable to authorize Facebook.',
 	'facebook_login:authorize:success' => 'Facebook access has been authorized.',
 

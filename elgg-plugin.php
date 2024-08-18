@@ -4,7 +4,7 @@ require_once __DIR__ . "/lib/functions.php";
 return [
 	'plugin' => [
 		'name' => 'Facebook Login',
-		'version' => '5.0',
+		'version' => '6.0',
 		'dependencies' => [],
 	],
 	'bootstrap' => FacebookLogin::class,
@@ -27,6 +27,14 @@ return [
 		'collection:object:facebook_login:revoke' => [
 			'path' => '/facebook_login/revoke',
 			'resource' => 'facebook_login/revoke',
+		],
+		'usersettings:facebook_login' => [
+			'path' => 'settings/facebook_login/{username?}',
+			'resource' => 'facebook_login/usersettings',
+			'middleware' => [
+				\Elgg\Router\Middleware\Gatekeeper::class,
+			],
+			'detect_page_owner' => true,
 		],
 	],
 ];
