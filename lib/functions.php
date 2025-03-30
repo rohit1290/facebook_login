@@ -13,7 +13,7 @@ function fb_login_send_user_password_mail($email, $name, $username, $password) {
 	$email = trim($email);
 
 	// send out other email addresses
-	if (!is_email_address($email)) {
+	if (!elgg_is_valid_email($email)) {
 		return false;
 	}
 
