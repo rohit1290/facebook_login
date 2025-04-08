@@ -10,7 +10,7 @@ return [
 	'bootstrap' => FacebookLogin::class,
 	'views' => [
 		'default' => [
-			'facebook_login/' => __DIR__ . '/graphics',
+			'fb/' => __DIR__ . '/graphics',
 		],
 	],
 	'routes' => [

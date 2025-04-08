@@ -3,7 +3,7 @@
  * An english language definition file
  */
 
-return array(
+return [
 	'facebook_login' => 'Facebook Services',
 
 	'facebook_login:requires_oauth' => 'Facebook Services requires the OAuth Libraries plugin to be enabled.',
@@ -47,4 +47,4 @@ You can login using either email id or username.
 %s
 %s'
 	
-);
+];

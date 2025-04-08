@@ -1,6 +1,6 @@
 <?php
 
-$cncl_url = elgg_get_site_url(). "login";
+$cncl_url = elgg_get_login_url();
 
 if (!facebook_login_allow_sign_on_with_facebook()) {
 	elgg_register_error_message(elgg_echo('Facebook registration is disabled'));
@@ -153,7 +153,7 @@ if (!$user instanceof \ElggUser) {
 		header("Location: {$cncl_url}");
 		die();
 	} else {
-		fb_login_send_user_password_mail($email, $fbname, $username, $password);
+		// fb_login_send_user_password_mail($email, $fbname, $username, $password);
 	}
 }
 

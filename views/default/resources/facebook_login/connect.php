@@ -2,7 +2,7 @@
 // Note: Manual Login Flow Doc:
 // https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
 
-$cncl_url = elgg_get_site_url(). "login";
+$cncl_url = elgg_get_login_url();
 
 if (!facebook_login_allow_sign_on_with_facebook()) {
 	elgg_register_error_message(elgg_echo('Facebook registration is disabled'));
@@ -20,7 +20,7 @@ $app_id = elgg_get_plugin_setting('app_id', 'facebook_login');
 $redirect_uri = elgg_generate_url('collection:object:facebook_login:login');
 $state = md5(rand(1000, 999));
 
-$url = "https://www.facebook.com/$app_version/dialog/oauth?client_id={$app_id}&redirect_uri={$redirect_uri}&state={$state}&scope=email";
+$url = "https://www.facebook.com/{$app_version}/dialog/oauth?client_id={$app_id}&redirect_uri={$redirect_uri}&state={$state}&scope=email,public_profile";
 
 header("Location: {$url}");
 die();
