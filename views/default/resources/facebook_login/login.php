@@ -200,5 +200,4 @@ if ((int) $user->icontime < (time() - 31536000)) {
 	}
 }
 
-header("Location: {$cncl_url}");
-die();
+header("Location: ".elgg_generate_url('collection:river:all'));
