@@ -115,6 +115,14 @@ if ($user_data === false) {
 }
 
 $user_data = json_decode($user_data, true);
+
+if (!isset($user_data['email'])) {
+	elgg_log("Email address not available. Data from FB: " . print_r($user_data, true), 'NOTICE');
+	elgg_register_error_message("Facebook did not return an email address. Please ensure your account has a verified email and has granted permission.");
+	header("Location: {$cncl_url}");
+	die();
+}
+
 $fbid = $user_data['id'];
 $fbname = $user_data['name'];
 $email = $user_data['email'];
